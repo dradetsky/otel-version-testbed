@@ -1,0 +1,24 @@
+version: '3.8'
+services:
+  # AWS OTel Collector
+  aws-ot-collector:
+    image: amazon/aws-otel-collector:v0.6.0
+    # image: amazon/aws-otel-collector:v0.3.0
+    # image: amazon/aws-otel-collector:v0.4.0
+    # image: amazon/aws-otel-collector:latest
+    # image: public.ecr.aws/aws-observability/aws-otel-collector:latest
+    # image: gallery.ecr.aws/aws-observability/aws-otel-collector:latest
+    command: ["--config=/etc/otel-agent-config.yaml", "--log-level=DEBUG"]
+    environment:
+      - HOME=/root
+      - AWS_REGION=us-east-2
+      - AWS_PROFILE=poc
+    volumes:
+      - ./cfg.yaml:/etc/otel-agent-config.yaml
+      - ~/.aws:/root/.aws
+    ports:
+      - "1777:1777"   # pprof extension
+      - "55679:55679" # zpages extension
+      - "55680:55680" # OTLP receiver
+      - "55681:55681" # OTLP receiver
+      - "13133:13133"       # health_check

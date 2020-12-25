@@ -1,0 +1,29 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:55680
+      http:
+        # NOTE(dmr, 2020-11-09): default is `endpoint: 0.0.0.0:55681`
+        cors_allowed_origins:
+        - http://*
+        - https://*
+
+exporters:
+  awsxray:
+  logging:
+    loglevel: debug
+
+service:
+  pipelines:
+    traces:
+      receivers:
+        - otlp
+      exporters:
+        - awsxray
+        - logging
+    metrics:
+      receivers:
+        - otlp
+      exporters:
+        - logging
